@@ -1,0 +1,65 @@
+{{> headercustomer}}
+<div class="wrapper">
+    <div class="container mt-2">
+        <div class="heading">Notifications
+        </div>
+        <div class="notifications mt-2 ">
+            {{#each notifications}}
+            <div class="card mb-3">
+                <div class="card-header text-white bg-primary">{{this.title}}</div>
+                <div class="card-body p-0 my-2 px-4">
+                    <p class="card-text  text-truncate">{{this.content}}
+                    </p>
+                    <button class="btn btn-primary btn-sm detail" data-id="{{this._id}}" data-title="{{this.title}}"
+                        data-content="{{this.content}}" data-time="{{this.createdAt}}" data-toggle="modal"
+                        data-target="#modal-detail-notification">Details</button>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+
+    <div class="modal fade " id="modal-detail-notification" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title  text-truncate" id="title-notify">
+                        Notification
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body modal-dialog-scrollable">
+                    <div class="text-sm font-weight-light" id="time-detail">
+
+                    </div>
+                    <p class="" id='content-notify'>Lorem ipsum dolor sit amet, con</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    let titleDetail = document.querySelector('#title-notify')
+    let contentDetail = document.querySelector('#content-notify')
+    let timeDetail = document.querySelector('#time-detail')
+    let details = document.querySelectorAll('.detail')
+    details.forEach(item => {
+        item.onclick = (e) => {
+            let id = item.getAttribute('data-id')
+            let title = item.getAttribute('data-title')
+            let content = item.getAttribute('data-content')
+            let time = item.getAttribute('data-time')
+            titleDetail.innerText = title
+            contentDetail.innerText = content
+            timeDetail.innerText = time
+        }
+    })
+
+</script>

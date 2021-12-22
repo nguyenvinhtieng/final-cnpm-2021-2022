@@ -1,0 +1,101 @@
+{{> headercustomer}}
+<div class="wrapper">
+
+    <div class="container mt-5">
+        Receipt
+        <form action="" id="form-view-receipt" method="post">
+            <div class="form-group d-flex">
+                <select class="form-control mx-2" name="month" id="month">
+                    <option value="">--</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                </select>
+                <input type="text" placeholder="Year" class="mx-2" id="year">
+                <button class="btn btn-primary mx-3">View</button>
+            </div>
+        </form>
+        <div class="container">
+            <div class="receipts">
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    let formViewReceipt = document.querySelector('#form-view-receipt')
+    formViewReceipt.onsubmit = (e) => {
+        e.preventDefault();
+        let month = document.querySelector('#month').value
+        let year = document.querySelector('#year').value
+        let obj = {}
+        if (month) obj.month = month
+        if (year) obj.year = year
+        $.ajax({
+            url: "/me/get-receipt",
+            type: 'POST',
+            data: obj,
+            success: function (response) {
+                console.log(response.receipts)
+                renderReceipts(response.receipts)
+            }
+        })
+    }
+    function renderReceipts(receipts) {
+        let main = document.querySelector('.receipts')
+        main.innerHTML = ``
+        receipts.forEach(receipt => {
+            main.innerHTML += `<table class="table">
+                <thead class="thead-light">
+                    <button class="btn btn-primary"> ${receipt.month} / ${receipt.year} </button>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">Electric</th>
+                        <td>${receipt.electric} VND</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Water</th>
+                        <td>${receipt.water} VND</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Service</th>
+                        <td>${receipt.service} VND</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Room price</th>
+                        <td>${receipt.roomprice} VND</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Total</th>
+                        <td> <button class="btn btn-primary">${receipt.total} VND </button>  </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Status</th>
+                        <td> ${receipt.status == 'paid' ? (`
+                            Paid at ${receipt.updatedAt}`) : (`<button class="btn btn-danger">unpaid</button>
+                            </br>Billing Information <br>
+        Account number: 123456789 <br>
+        Account name: Admin <br>
+        Content: payment for room in ${receipt.month} / ${receipt.year} . Room  ${receipt.roomnumber}`)}  </td>
+                    </tr>
+                </tbody>
+            </table>
+            `
+        })
+    }
+</script>
