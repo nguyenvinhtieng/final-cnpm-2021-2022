@@ -1,0 +1,176 @@
+{{> header}}
+<div class="wrapper">
+    <div class="container">
+        <h1>View revenue</h1>
+        <form>
+            <div class="form-group d-flex">
+                <input type="number" placeholder="Year" id="year" class="mx-2" />
+                <select id="month" class="mx-2">
+                    <option value="">----</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                </select>
+                <button id="btn-view" class="mx-2">View</button>
+            </div>
+
+        </form>
+        <div class="container d-flex">
+            <div class="revenue align-center mx-1">
+
+            </div>
+            <div id="chart">
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="/assets/chart/index.js"></script>
+
+<script>
+    let btnView = document.querySelector('#btn-view')
+    btnView.onclick = (e) => {
+        e.preventDefault();
+        let year = document.querySelector('#year').value
+        if (year == '' || year < 2000) {
+            showErrorToast("Year a not valid")
+        } else {
+            let month = document.querySelector('#month').value
+            // getData(year, month)
+            if (month == '') {
+                getDataYear(year)
+            } else {
+                getDataMonth(year, month)
+            }
+        }
+
+    }
+
+    function getDataYear(year) {
+        $.ajax({
+            url: '/admin/getrevenue-year',
+            type: 'POST',
+            data: { year },
+            success: function (data) {
+                renderChartYear(data, year)
+            }
+        })
+    }
+    function getDataMonth(year, month) {
+        $.ajax({
+            url: '/admin/getrevenue-month',
+            type: 'POST',
+            data: { year, month },
+            success: function (data) {
+                renderDataMonth(data, year, month)
+            }
+        })
+    }
+    function renderChartYear(data, year) {
+        let revenue = data.thu
+        let chi = data.data1
+        let total = 0;
+        console.log(data)
+        revenue.forEach(function (m) {
+            total += m;
+        })
+        let totalChi = 0;
+        chi.forEach(function (m) {
+            totalChi += m;
+        })
+        document.querySelector('.revenue').innerHTML = `
+            <div class="card">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item  bg-info">Result for year ${year}</li>
+                    <li class="list-group-item">Revenue: ${total} (VND)</li>
+                    <li class="list-group-item">Expenditure: ${totalChi} (VND)</li>
+                </ul>
+            </div>`
+        drawChart(revenue, chi)
+    }
+
+    function renderDataMonth(data, year, month) {
+        containerChart.innerHTML = ``
+        let main = document.querySelector('.revenue')
+        main.innerHTML = `
+            <div class="card">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item  bg-info">Result for ${month}/${year}</li>
+                    <li class="list-group-item">Revenue: ${data.data} (VND)</li>
+                    <li class="list-group-item">Expenditure: ${data.chi} (VND)</li>
+                </ul>
+            </div>`
+    }
+
+    function hiddenModal() {
+        document.getElementById('modal-change-password').checked = false
+    }
+    function validDate(oldP, newP, repeatP) {
+        if (oldP === '') {
+            showErrorToast('Current password can not be empty')
+            return false
+        }
+        if (newP === '') {
+            showErrorToast('New password can not be empty')
+            return false
+        }
+        if (newP.length < 8) {
+            showErrorToast('New password need more than 8 characters')
+            return false
+        }
+        if (newP !== repeatP) {
+            showErrorToast('Repeat password not match')
+            return false
+        }
+        return true
+
+    }
+    let containerChart = document.getElementById('chart')
+    function drawChart(revenue, chi) {
+        let canvas = document.createElement('canvas');
+        canvas.setAttribute('width', "600")
+        canvas.setAttribute('height', "400")
+        containerChart.innerHTML = ``
+        containerChart.appendChild(canvas)
+        const ctx = canvas.getContext('2d');
+        let month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: month,
+                datasets: [{
+                    label: 'Revenue',
+                    data: revenue,
+                    backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Expenditure ',
+                    data: chi,
+                    backgroundColor: 'rgba(31, 0, 233, 0.582)',
+                    borderColor: 'rgba(31, 0, 233, 0.582)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+</script>

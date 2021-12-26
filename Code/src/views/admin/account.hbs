@@ -1,0 +1,167 @@
+{{> header}}
+<div class="wrapper">
+    <div class="container mt-4">
+        <div class="p">
+            Manager account
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-account">
+                ADD
+            </button>
+        </div>
+        <table class="table mt-3">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Room</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">#</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each accounts}}
+                <tr>
+                    <th scope="row">{{this.room}}</th>
+                    <td>{{this.username}}</td>
+                    <td>{{this.email}}</td>
+                    <td>
+                        <button type="button" data-id="{{this._id}}" data-room="{{this.room}}"
+                            data-username="{{this.username}}" data-email="{{this.email}}"
+                            class="btn btn-primary btn-sm edit" data-toggle="modal" data-target="#modal-edit-account"><i
+                                class="fas fa-edit"></i></button>
+                        <button type="button" data-id="{{this._id}}" class="btn btn-danger btn-sm delete"
+                            data-toggle="modal" data-target="#modal-delete-account"><i
+                                class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
+<form action="" method="post">
+    <div class="modal fade" id="add-account" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add an account</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="">Room</label>
+                        <select name="room" required>
+                            <option value="">--</option>
+                            {{#each rooms}}
+                            <option value="{{this.number}}">{{this.number}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Username</label>
+                        <input type="text" name="username" placeholder="Username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Email</label>
+                        <input type="text" placeholder="Email" name="email" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div type="button" class="btn btn-secondary" data-dismiss="modal">Close</div>
+                    <button type="submit" class="btn btn-primary">ADD</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- Modal -->
+<div class="modal fade" id="modal-delete-account" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete account</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this account?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a href="#" type="button" class="btn btn-danger btn-delete">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+<form action="/admin/update-account" method="post">
+    <div class="modal fade" id="modal-edit-account" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit account</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="">Username</label>
+                        <input type="text" value="" id="username-edit" disabled class="form-control">
+                        <input type="hidden" value="" id="username-edit-v2" class="form-control" name="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Email</label>
+                        <input type="text" value="" id="email-edit" class="form-control" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Room</label>
+                        <select name="room" id="" required>
+                            <option value="" id="first-option">--</option>
+                            {{#each rooms}}
+                            <option value="{{this.number}}">{{this.number}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" type="button" class="btn btn-primary btn-delete">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    let deletes = document.querySelectorAll('.delete')
+    let btnDelete = document.querySelector('.btn-delete')
+    deletes.forEach(item => {
+        item.onclick = (e) => {
+            let id = item.getAttribute('data-id')
+            btnDelete.href = `/admin/delete-account/${id}`
+        }
+    })
+
+    let idEditBox = document.getElementById('id-edit')
+    let usernameEditBox = document.getElementById('username-edit')
+    let usernameEditBoxV2 = document.getElementById('username-edit-v2')
+    let emailEditBox = document.getElementById('email-edit')
+    let firtOptionBox = document.getElementById('first-option')
+    edits = document.querySelectorAll('.edit')
+    edits.forEach(item => {
+        item.onclick = (e) => {
+            let id = item.getAttribute('data-id')
+            let email = item.getAttribute('data-email')
+            let username = item.getAttribute('data-username')
+            let room = item.getAttribute('data-room')
+            emailEditBox.value = email
+            usernameEditBox.value = username
+            usernameEditBoxV2.value = username
+            firtOptionBox.value = room
+            firtOptionBox.textContent = room
+        }
+    })
+</script>

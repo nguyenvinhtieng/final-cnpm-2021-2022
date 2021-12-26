@@ -1,0 +1,175 @@
+{{> header}}
+<div class="wrapper">
+    <div class="container mt-5">
+        Manage Receipt <button type="button" class="btn btn-primary" data-toggle="modal"
+            data-target="#modal-create-task">Add</button>
+        <form action="" id="form-view-receipt">
+            <div class="form-group d-flex g-1">
+                <input type="number" id="month" placeholder="Month" min="1" max="12" class="mx-2">
+                <input type="number" id="year" placeholder="Year" min="2000" max="2040" class="mx-2">
+                <select name="roomnumber" id="roomnumber" class="mx-2">
+                    <option value="">--</option>
+                    {{#each rooms}}
+                    <option value="{{this.number}}">{{this.number}}</option>
+                    {{/each}}
+                </select>
+                <button class="btn btn-primary" class="mx-2">View</button>
+            </div>
+        </form>
+        <div id="receipts">
+
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <form action="" method="post">
+        <div class="modal fade" id="modal-create-task" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add new receipt</h5>
+                        <div type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="">Room</label>
+                            <select name="room" id="room" required>
+                                <option value="">--</option>
+                                {{#each rooms}}
+                                <option value="{{this.number}}">{{this.number}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Electric (VND)</label>
+                            <input type="number" name="electric" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Water (VND)</label>
+                            <input type="number" name="water" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Room price (VND)</label>
+                            <input type="number" name="roomprice" min="0" id="roomprice" value="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Month</label>
+                            <input type="number" name="month" min="1" max="12" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Year</label>
+                            <input type="number" name="year" min="2000" max="2040" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div type="button" class="btn btn-secondary" data-dismiss="modal">Close</div>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+{{#each rooms}}
+<input type="hidden" id="{{this.number}}" value="{{this.price}}"></input>
+{{/each}}
+
+<script>
+    let formViewReceipt = document.getElementById("form-view-receipt")
+    formViewReceipt.onsubmit = (e) => {
+        e.preventDefault();
+        let year = document.getElementById("year").value
+        let month = document.getElementById("month").value
+        let roomnumber = document.getElementById("roomnumber").value
+        let obj = {}
+        if (year) obj.year = year
+        if (month) obj.month = month
+        if (roomnumber) obj.roomnumber = roomnumber
+        $.ajax({
+            url: '/admin/get-receipt',
+            type: 'POST',
+            data: obj,
+            success: (response) => {
+                renderReceipts(response.receipts);
+            }
+        })
+    }
+    function renderReceipts(receipts) {
+        let main = document.querySelector('#receipts')
+        main.innerHTML = ''
+        receipts.forEach(receipt => {
+            main.innerHTML += `
+            <table class="table">
+                <thead class="thead-light">
+                    <button class="btn btn-primary">${receipt.roomnumber} : ${receipt.month} / ${receipt.year} </button>
+                    ${receipt.status == "paid" ? (`Payment at : ${receipt.updatedAt}`) : ""} 
+                    ${receipt.status == "cancel" ? (`<button class="btn btn-danger mx-4"> Cancel</button>`) : ""} 
+                    ${receipt.status == "unpaid" ? (`
+                            <div class="form-group d-flex">
+                                <input type="hidden" name="id" class="id" value="${receipt._id}"/>
+                                <select class="form-control mx-4 status" name="status">
+                                    <option value="unpaid">---</option>
+                                    <option value="paid">paid</option>
+                                    <option value="cancel">cancel</option>
+                                </select>
+                                <button type="submit" class="btn btn-primary mx-4 btn-save" >Save</button>
+                            </div>
+                    `) : ""}
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">Electric</th>
+                        <td>${receipt.electric} VND</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Water</th>
+                        <td>${receipt.water} VND</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Service</th>
+                        <td>${receipt.service} VND</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Room price</th>
+                        <td>${receipt.roomprice} VND</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Total</th>
+                        <td> <button class="btn btn-primary">${receipt.total} VND </button>  </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Status</th>
+                        <td> ${receipt.status}</td>
+                    </tr>
+                </tbody>
+            </table>
+            `
+        })
+    }
+    window.addEventListener('click', (e) => {
+        if (e.target.classList.contains('btn-save')) {
+            let form = e.target.parentNode
+            let id = form.querySelector('.id').value
+            let status = form.querySelector('.status').value
+            window.location.href = `/admin/update-receipt/${id}/${status}`
+        }
+    })
+
+    let selectRoom = document.querySelector('#room')
+    let roomPrice = document.querySelector('#roomprice')
+    console.log(roomPrice)
+    selectRoom.onchange = (e) => {
+        let roomId = e.target.value
+        if (roomId) roomPrice.value = +document.querySelector(`#${roomId}`).value
+        else roomPrice.value = 0
+    }
+</script>

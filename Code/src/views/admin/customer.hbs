@@ -1,0 +1,441 @@
+{{> header}}
+<div class="wrapper">
+    <div class="container-fluid mt-3">
+        <div class="heading">Manage Customer
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-customer">
+                Add customer
+            </button>
+        </div>
+        <div class="customers mt-3 table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Room</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Sex</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Start day</th>
+                        <th scope="col">End day</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each customers}}
+                    <tr>
+                        <th scope="row">
+                            <h6> {{this.roomnumber}}</h6>
+                        </th>
+                        <td>
+                            <h6> {{this.name}}</h6>
+                        </td>
+                        <td>
+                            <h6> {{this.sex}}</h6>
+                        </td>
+                        <td>
+                            <h6> {{this.phone}}</h6>
+                        </td>
+                        <td>
+                            <h6> {{this.email}}</h6>
+                        </td>
+                        <td>
+                            <h6> {{this.startday}}</h6>
+                        </td>
+                        <td>
+                            <h6> {{this.endday}}</h6>
+                        </td>
+                        <td>
+                            <h6> {{this.status}}</h6>
+                        </td>
+                        <td>
+                            <button class="btn btn-success view" data-id="{{this._id}}"
+                                data-roomnumber="{{this.roomnumber}}" data-name="{{this.name}}" data-sex="{{this.sex}}"
+                                data-identity="{{this.identity}}" data-dateofbirth="{{this.dateofbirth}}"
+                                data-phone="{{this.phone}}" data-email="{{this.email}}"
+                                data-startday="{{this.startday}}" data-endday="{{this.endday}}" data-job="{{this.job}}"
+                                data-note="{{this.note}}" data-status="{{this.status}}" data-toggle="modal"
+                                data-target="#modal-view-customer"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-primary edit" data-id="{{this._id}}"
+                                data-roomnumber="{{this.roomnumber}}" data-name="{{this.name}}" data-sex="{{this.sex}}"
+                                data-identity="{{this.identity}}" data-dateofbirth="{{this.dateofbirth}}"
+                                data-phone="{{this.phone}}" data-email="{{this.email}}"
+                                data-startday="{{this.startday}}" data-endday="{{this.endday}}" data-job="{{this.job}}"
+                                data-note="{{this.note}}" data-status="{{this.status}}" data-toggle="modal"
+                                data-target="#modal-edit-customer"><i class="fas fa-edit"></i></button>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Button trigger modal -->
+
+
+    <!-- Modal -->
+    <form action="" method="post">
+        <div class="modal fade" id="modal-add-customer" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Add new customer</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="heading blockquote text-center">Personal Information</div>
+                        <div class="d-flex">
+                            <div class="form-group mx-2">
+                                <label for="">Fullname</label>
+                                <input type="text" placeholder="Full name" class="form-control" name="name" required>
+                            </div>
+                            <div class="form-group mx-2">
+                                <label for="">Identity card number</label>
+                                <input type="text" placeholder="Identity card number" class="form-control"
+                                    name="identity">
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="form-group mx-2">
+                                <label for="">Phone number</label>
+                                <input type="text" placeholder="Phone number" class="form-control" name="phone"
+                                    required>
+                            </div>
+                            <div class="form-group mx-2">
+                                <label for="">Date of Birth</label>
+                                <input type="date" class="form-control" name="dateofbirth" required>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="form-group mx-2">
+                                <label for="">Sex</label>
+                                <select name="sex" required>
+                                    <option value="">--</option>
+                                    <option value="female">female</option>
+                                    <option value="male">male</option>
+                                </select>
+                            </div>
+                            <div class="form-group mx-2">
+                                <label for="">Job</label>
+                                <input type="text" class="form-control" name="job" placeholder="Job" required>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="form-group mx-2">
+                                <label for="">Email</label>
+                                <input type="text" class="form-control" name="email" placeholder="Email" required>
+                            </div>
+                            <div class="form-group mx-2">
+                                <label for="">Note</label>
+                                <input type="text" class="form-control" name="note" placeholder="Note" required>
+                            </div>
+                        </div>
+                        <div class="heading blockquote text-center">Motel Information</div>
+                        <div class="d-flex">
+                            <div class="form-group mx-2">
+                                <label for="">Room</label>
+                                <select name="roomnumber" required>
+                                    <option value="">--</option>
+                                    {{#each rooms}}
+                                    <option value="{{this.number}}">{{this.number}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <div class="form-group mx-2">
+                                <label for="">Start day</label>
+                                <input type="date" class="form-control" name="startday" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="modal fade" id="modal-view-customer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Customer data</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="heading blockquote text-center">Personal Information</h6>
+                    <div class="d-flex">
+                        <div class="form-group mx-2">
+                            <label for="">Fullname</label>
+                            <input type="text" placeholder="Full name" id="name-view" class="form-control" name="name"
+                                disabled>
+                        </div>
+                        <div class="form-group mx-2">
+                            <label for="">Identity card number</label>
+                            <input type="text" placeholder="Identity card number" id="identity-view"
+                                class=" form-control" name="identity" disabled>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="form-group mx-2">
+                            <label for="">Phone number</label>
+                            <input type="text" placeholder="Phone number" class="form-control" id="phone-view"
+                                name="phone" disabled>
+                        </div>
+                        <div class="form-group mx-2">
+                            <label for="">Date of Birth</label>
+                            <input type="date" class="form-control" name="dateofbirth" id="dateofbirth-view" disabled>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="form-group mx-2">
+                            <label for="">Sex</label>
+                            <input type="text" disabled id="sex-view">
+                        </div>
+                        <div class="form-group mx-2">
+                            <label for="">Job</label>
+                            <input type="text" class="form-control" name="job" id="job-view" placeholder="Job" disabled>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="form-group mx-2">
+                            <label for="">Email</label>
+                            <input type="text" class="form-control" id="email-view" name="email" placeholder="Email"
+                                disabled>
+                        </div>
+                        <div class="form-group mx-2">
+                            <label for="">Note</label>
+                            <input type="text" class="form-control" id="note-view" name="note" placeholder="Note"
+                                disabled>
+                        </div>
+                    </div>
+                    <div class="heading blockquote text-center">Motel Information</div>
+                    <div class="d-flex">
+                        <div class="form-group mx-2">
+                            <label for="">Room</label>
+                            <input type="text" disabled class="form-control" id="roomnumber-view" name="room">
+                        </div>
+                        <div class="form-group mx-2">
+                            <label for="">Status</label>
+                            <input type="text" disabled class="form-control" id="status-view" name="room">
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="form-group mx-2">
+                            <label for="">Start day</label>
+                            <input type="date" class="form-control" id="startday-view" name="startstartday" disabled>
+                        </div>
+                        <div class="form-group mx-2">
+                            <label for="">End day</label>
+                            <input type="date" class="form-control" id="endday-view" name="startstartday" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{!-- EDIT --}}
+    <form action="/admin/update-customer" method="post">
+        <div class="modal fade" id="modal-edit-customer" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Edit customer data</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h6 class="heading blockquote text-center">Personal Information</h6>
+                        <div class="d-flex">
+                            <div class="form-group mx-2">
+                                <input type="hidden" value="" id="id-edit" name="id" required>
+                                <label for="">Fullname</label>
+                                <input type="text" placeholder="Full name" id="name-edit" class="form-control"
+                                    name="name" required>
+                            </div>
+                            <div class="form-group mx-2">
+                                <label for="">Identity card number</label>
+                                <input type="text" placeholder="Identity card number" id="identity-edit"
+                                    class=" form-control" name="identity" required>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="form-group mx-2">
+                                <label for="">Phone number</label>
+                                <input type="text" placeholder="Phone number" class="form-control" id="phone-edit"
+                                    name="phone" required>
+                            </div>
+                            <div class="form-group mx-2">
+                                <label for="">Date of Birth</label>
+                                <input type="date" class="form-control" name="dateofbirth" id="dateofbirth-edit"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="form-group mx-2">
+                                <label for="">Sex</label>
+                                <select name="sex" required>
+                                    <option value="" id="sex-edit"></option>
+                                    <option value="male">male</option>
+                                    <option value="female">female</option>
+                                </select>
+                            </div>
+                            <div class="form-group mx-2">
+                                <label for="">Job</label>
+                                <input type="text" class="form-control" name="job" id="job-edit" placeholder="Job"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="form-group mx-2">
+                                <label for="">Email</label>
+                                <input type="text" class="form-control" id="email-edit" name="email" placeholder="Email"
+                                    required>
+                            </div>
+                            <div class="form-group mx-2">
+                                <label for="">Note</label>
+                                <input type="text" class="form-control" id="note-edit" name="note" placeholder="Note"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="heading blockquote text-center">Motel Information</div>
+                        <div class="d-flex">
+                            <div class="form-group mx-2">
+                                <label for="">Room</label>
+                                <select name="roomnumber">
+                                    <option value="" id="roomnumber-edit"></option>
+                                    {{#each rooms}}
+                                    <option value="{{this.number}}">{{this.number}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="form-group mx-2">
+                                <label for="">Start day</label>
+                                <input type="date" class="form-control" id="startday-edit" name="startday" required>
+                            </div>
+                            <div class="form-group mx-2">
+                                <label for="">End day</label>
+                                <input type="date" class="form-control" id="endday-edit" name="endday">
+                                <button type="button" class="btn btn-primary btn-sm resest-endday">Resest</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    let nameViewBox = document.getElementById("name-view")
+    let identityViewBox = document.getElementById("identity-view")
+    let phoneViewBox = document.getElementById("phone-view")
+    let dateofbirthViewBox = document.getElementById("dateofbirth-view")
+    let sexViewBox = document.getElementById("sex-view")
+    let jobViewBox = document.getElementById("job-view")
+    let emailViewBox = document.getElementById("email-view")
+    let noteViewBox = document.getElementById("note-view")
+    let roomnumberViewBox = document.getElementById("roomnumber-view")
+    let statusViewBox = document.getElementById("status-view")
+    let startdayViewBox = document.getElementById("startday-view")
+    let enddayViewBox = document.getElementById("endday-view")
+    let views = document.querySelectorAll('.view')
+    views.forEach(item => {
+        item.onclick = (e) => {
+            let id = item.getAttribute('data-id')
+            let roomnumber = item.getAttribute('data-roomnumber')
+            let name = item.getAttribute('data-name')
+            let sex = item.getAttribute('data-sex')
+            let identity = item.getAttribute('data-identity')
+            let dateofbirth = item.getAttribute('data-dateofbirth')
+            let phone = item.getAttribute('data-phone')
+            let email = item.getAttribute('data-email')
+            let startday = item.getAttribute('data-startday')
+            let endday = item.getAttribute('data-endday')
+            let job = item.getAttribute('data-job')
+            let note = item.getAttribute('data-note')
+            let status = item.getAttribute('data-status')
+            nameViewBox.value = name
+            identityViewBox.value = identity
+            phoneViewBox.value = phone
+            dateofbirthViewBox.value = dateofbirth
+            sexViewBox.value = sex
+            jobViewBox.value = job
+            emailViewBox.value = email
+            noteViewBox.value = note
+            roomnumberViewBox.value = roomnumber
+            statusViewBox.value = status
+            startdayViewBox.value = startday
+            enddayViewBox.value = endday
+        }
+    })
+
+    // edit the
+    let nameEditBox = document.getElementById("name-edit")
+    let identityEditBox = document.getElementById("identity-edit")
+    let phoneEditBox = document.getElementById("phone-edit")
+    let dateofbirthEditBox = document.getElementById("dateofbirth-edit")
+    let sexEditBox = document.getElementById("sex-edit")
+    let jobEditBox = document.getElementById("job-edit")
+    let emailEditBox = document.getElementById("email-edit")
+    let noteEditBox = document.getElementById("note-edit")
+    let roomnumberEditBox = document.getElementById("roomnumber-edit")
+    let statusEditBox = document.getElementById("status-edit")
+    let startdayEditBox = document.getElementById("startday-edit")
+    let enddayEditBox = document.getElementById("endday-edit")
+    let idEditBox = document.getElementById("id-edit")
+    let edits = document.querySelectorAll('.edit')
+    edits.forEach(item => {
+        item.onclick = (e) => {
+            let id = item.getAttribute('data-id')
+            let roomnumber = item.getAttribute('data-roomnumber')
+            let name = item.getAttribute('data-name')
+            let sex = item.getAttribute('data-sex')
+            let identity = item.getAttribute('data-identity')
+            let dateofbirth = item.getAttribute('data-dateofbirth')
+            let phone = item.getAttribute('data-phone')
+            let email = item.getAttribute('data-email')
+            let startday = item.getAttribute('data-startday')
+            let endday = item.getAttribute('data-endday')
+            let job = item.getAttribute('data-job')
+            let note = item.getAttribute('data-note')
+            let status = item.getAttribute('data-status')
+            idEditBox.value = id
+            nameEditBox.value = name
+            identityEditBox.value = identity
+            phoneEditBox.value = phone
+            dateofbirthEditBox.value = dateofbirth
+            sexEditBox.value = sex
+            sexEditBox.innerHTML = sex
+            jobEditBox.value = job
+            emailEditBox.value = email
+            noteEditBox.value = note
+            roomnumberEditBox.value = roomnumber
+            roomnumberEditBox.innerHTML = roomnumber
+            startdayEditBox.value = startday
+            enddayEditBox.value = endday
+        }
+    })
+
+    let btnResest = document.querySelector('.resest-endday')
+    btnResest.onclick = (e) => {
+        enddayEditBox.value = null
+    }
+</script>
