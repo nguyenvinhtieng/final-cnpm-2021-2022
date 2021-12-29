@@ -1,9 +1,13 @@
+// Models
 const Account = require('../models/Account');
 const Staff = require('../models/Staff');
 const Job = require('../models/Job.js')
 const jwt = require('jsonwebtoken');
 const Service = require('../models/Service')
-const TOKEN_KEY = 'AmkshOnmshGndksmHg'
+
+// Constants
+const TOKEN_KEY = process.env.TOKEN_KEY_SECRET
+
 class StaffController {
     renderHome(req, res) {
         res.render('./staff/home')

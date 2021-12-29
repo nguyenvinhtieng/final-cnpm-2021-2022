@@ -1,15 +1,19 @@
+// modules
+const bcrypt = require("bcrypt");
+
+// Models
 const Account = require('../models/Account.js')
 const Device = require('../models/Device.js')
 const Room = require('../models/Room.js')
 const Job = require('../models/Job.js')
 const Staff = require('../models/Staff.js')
-const bcrypt = require("bcrypt");
 const Receipt = require('../models/Receipt.js')
 const DeviceInRoom = require('../models/DeviceInRoom.js')
 const Service = require('../models/Service.js')
 const Repair = require('../models/Repair.js')
 const Notification = require('../models/Notification')
 const Customer = require('../models/Customer.js')
+
 class AdminController {
     // GET '/admin/home'
     renderHome(req, res, next) {

@@ -1,16 +1,18 @@
+// Models
 const Customer = require('../models/Customer.js')
 const DeviceInRoom = require('../models/DeviceInRoom.js')
 const Device = require('../models/Device.js')
 const Room = require('../models/Room.js')
 const jwt = require('jsonwebtoken');
 const Account = require('../models/Account.js')
-const { multipleMongooseToObject, mongooseToObject } = require('../../utils/mongoose')
-const TOKEN_KEY = 'AmkshOnmshGndksmHg'
 const Notification = require('../models/Notification.js')
 const Job = require('../models/Job')
 const Receipt = require('../models/Receipt.js')
 const Repair = require('../models/Repair.js')
 const Service = require('../models/Service.js')
+
+// Constants
+const TOKEN_KEY = process.env.TOKEN_KEY_SECRET
 class MeController {
     renderHome(req, res, next) {
         res.render('me/home')
@@ -83,15 +85,6 @@ class MeController {
         res.render('./me/notification', { notifications })
     }
 
-    renderDetailNotification(req, res, next) {
-        Notification.findOne({ _id: req.params.id })
-            .then(data => {
-                res.render('./me/detailnotification', { data: mongooseToObject(data) })
-            })
-            .catch(err => {
-                res.redirect('/me/notification')
-            })
-    }
 
     async createJob(req, res, next) {
         try {
